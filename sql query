@@ -1,0 +1,49 @@
+#дата замовлення
+#ідентифікатор сесії
+#континент
+#країна
+#девайс
+#браузер
+#назва моделі пристрою
+#операційна система
+#мова браузера
+#інформація про джерело трафіку 
+#канал трафіку
+#ідентифікатор зареєстрованого користувача
+#чи підтвердив користувач свій email
+#чи підписався користувач на розсилку
+#категорія товару
+#назва товару
+#ціна
+#короткий опис товару
+
+    select
+  s.date as order_date,
+  s.ga_session_id as session_id,
+  sp.continent,
+  sp.country,
+  sp.device,
+  sp.browser,
+  sp.mobile_model_name as mobile_model_name,
+  sp.operating_system,
+  sp.language,
+  sp.name,
+  sp.channel,
+  a.id as account_id,
+  a.is_verified,
+  a.is_unsubscribed,
+  p.category,
+  p.name as item_name,
+  p.price,
+  p.short_description
+from `DA.session_params` sp
+left join `DA.account_session` acs
+on sp.ga_session_id = acs.ga_session_id
+left join `DA.account` a
+on acs.account_id = a.id
+left join `DA.order` o
+on sp.ga_session_id = o.ga_session_id
+left join `DA.product` p
+on o.item_id = p.item_id
+join `DA.session` s
+on sp.ga_session_id = s.ga_session_id
